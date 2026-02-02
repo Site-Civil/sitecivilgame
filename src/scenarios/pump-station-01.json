@@ -29,6 +29,87 @@
     { "label": "Utility separation / cover / crossings", "hint": "Typical separations, minimum cover, conflicts, corrosion, thrust restraint, access." },
     { "label": "Pump station yard safety", "hint": "Drain away from electrical, generators, door thresholds; ice hazards; hose-down considerations." }
   ],
+
+  "events": [
+    {
+      "id": "gw-encountered",
+      "title": "Curveball: Groundwater Encountered",
+      "prompt": "During excavation near the wet well, groundwater shows up earlier than expected. Dewatering and base prep are now a concern.",
+      "triggerAfterStepIds": ["utilityConflicts"],
+      "once": true,
+      "options": [
+        {
+          "id": "gw1",
+          "title": "Add dewatering + overexcavate/replace plan",
+          "description": "Document temporary dewatering, overexcavate unsuitable material, and place imported structural fill with QC testing.",
+          "effects": { "compliance": 4, "constructability": 3, "cost": -3, "risk": 5, "schedule": -2 },
+          "flags": ["groundwater_plan"],
+          "rationale": "More expensive and slower, but reduces risk and produces a defensible plan set."
+        },
+        {
+          "id": "gw2",
+          "title": "Proceed with minimal mitigation (field fit)",
+          "description": "Rely on contractor means/methods without documenting a detailed approach.",
+          "effects": { "compliance": -2, "constructability": 1, "cost": 2, "risk": -6, "schedule": 1 },
+          "flags": ["construction_rfi_risk"],
+          "rationale": "Often triggers RFIs and change orders; increases settlement and long-term performance risk."
+        }
+      ]
+    },
+    {
+      "id": "review-comment",
+      "title": "Reviewer Comment: Offsite Discharge Concern",
+      "prompt": "City reviewer asks you to justify offsite discharge and provide a clearer major-storm overflow path away from electrical gear.",
+      "triggerAfterStepIds": ["stormwaterTreatment"],
+      "once": true,
+      "options": [
+        {
+          "id": "rc1",
+          "title": "Revise plan: add defined overflow routing + notes",
+          "description": "Add an overflow route, spot grades/flow arrows, and an O&M note describing inspection/cleanout.",
+          "effects": { "compliance": 5, "constructability": 1, "cost": -1, "risk": 3, "schedule": -1 },
+          "flags": ["reviewer_resolved"],
+          "rationale": "Small design effort now prevents permit churn and future safety issues."
+        },
+        {
+          "id": "rc2",
+          "title": "Respond: 'Contractor to verify' (minimal change)",
+          "description": "Provide a narrative response with minimal plan revisions.",
+          "effects": { "compliance": -3, "constructability": 0, "cost": 1, "risk": -2, "schedule": 0 },
+          "flags": ["reviewer_pushback"],
+          "rationale": "May keep momentum short-term, but often comes back as another comment cycle."
+        }
+      ]
+    },
+    {
+      "id": "utility-hit",
+      "title": "Oops: Utility Pothole Conflict",
+      "prompt": "Potholing reveals an unexpected shallow telecom duct bank where you planned to cross. You need an adjustment.",
+      "triggerAfterStepIds": ["constructionAccess"],
+      "once": true,
+      "options": [
+        {
+          "id": "uh1",
+          "title": "Reroute to avoid conflict (longer but clean)",
+          "description": "Shift alignment and add a note calling for potholing verification at crossing zones.",
+          "effects": { "compliance": 2, "constructability": 3, "cost": -1, "risk": 3, "schedule": -1 },
+          "flags": ["conflict_avoided"],
+          "rationale": "Avoidance is usually cheaper than protection/relocation once duct banks are involved."
+        },
+        {
+          "id": "uh2",
+          "title": "Protect-in-place with concrete cap + hand excavation",
+          "description": "Detail protection and require hand-excavation near the duct bank.",
+          "effects": { "compliance": 1, "constructability": -1, "cost": -2, "risk": 1, "schedule": -2 },
+          "flags": ["protection_detail"],
+          "rationale": "Can work, but increases schedule risk and construction complexity."
+        }
+      ]
+    }
+  ],
+
+
+  
   "steps": [
     {
       "id": "brief",
