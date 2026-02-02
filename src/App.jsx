@@ -142,7 +142,9 @@ function Player({ scenario, onExit }) {
       case "GOTO":
         return { ...state, stepId: action.stepId };
       case "CHOOSE":
-        return applyChoice(state, action.stepId, action.option);
+        return applyChoice(scenario, state, action.stepId, action.option);
+      case "CHOOSE_EVENT":
+        return applyEventChoice(scenario, state, action.event, action.option);
       default:
         return state;
     }
@@ -152,6 +154,10 @@ function Player({ scenario, onExit }) {
     () => scenario.steps.find((s) => s.id === runState.stepId),
     [scenario.steps, runState.stepId]
   );
+
+  const isEvent = isEventStepId(runState.stepId);
+  const eventId = isEvent ? parseEventId(runState.stepId) : null;
+  const event = isEvent ? (scenario.events || []).find((e) => e.id === eventId) : null;
 
   const total = weightedTotal(runState.scores, scenario.scoringWeights);
 
@@ -175,6 +181,31 @@ function Player({ scenario, onExit }) {
         <Pill>Weighted total: {total}</Pill>
       </div>
 
+      {isEvent && event ? (
+        <Card title={`Event Card: ${event.title}`}>
+          <div style={{ opacity: 0.85 }}>{event.prompt}</div>
+
+          <div style={{ marginTop: 14, display: "grid", gap: 12 }}>
+            {event.options.map((opt) => (
+              <div key={opt.id} style={{ display: "grid", gap: 10 }}>
+                <OptionCard
+                  option={opt}
+                  onChoose={() =>
+                    dispatch({ type: "CHOOSE_EVENT", event, option: opt })
+                  }
+                />
+              </div>
+            ))}
+          </div>
+
+          <div style={{ marginTop: 14, opacity: 0.75, fontSize: 12 }}>
+            After you resolve this event, the scenario will resume where you left off.
+          </div>
+        </Card>
+      ) : null}
+
+
+      
       {step.type === "brief" ? (
         <div style={{ display: "grid", gap: 16 }}>
           <Card title={step.title}>
