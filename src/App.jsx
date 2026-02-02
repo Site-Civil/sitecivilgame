@@ -206,7 +206,7 @@ function Player({ scenario, onExit }) {
 
 
       
-      {step.type === "brief" ? (
+      {!isEvent && step.type === "brief" ? (
         <div style={{ display: "grid", gap: 16 }}>
           <Card title={step.title}>
             <div style={{ opacity: 0.85 }}>{step.prompt}</div>
@@ -261,7 +261,7 @@ function Player({ scenario, onExit }) {
         </div>
       ) : null}
 
-      {step.type === "decision" ? (
+      {!isEvent && step.type === "decision" ? (
         <Card title={step.title}>
           <div style={{ opacity: 0.85 }}>{step.prompt}</div>
 
@@ -302,7 +302,7 @@ function Player({ scenario, onExit }) {
         </Card>
       ) : null}
 
-      {step.type === "results" ? (
+      {!isEvent && step.type === "results" ? (
         <div style={{ display: "grid", gap: 16 }}>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <button style={styles.primaryBtn} onClick={() => dispatch({ type: "RESET" })}>
