@@ -3,11 +3,15 @@ import { scenarios, getScenarioById } from "./scenarios";
 import { Card, OptionCard, Pill, ScoreBar, styles } from "./ui/components";
 import {
   applyChoice,
+  applyEventChoice,
   buildRedFlags,
   gradeFromTotal,
   makeInitialRun,
   weightedTotal,
+  isEventStepId,
+  parseEventId,
 } from "./engine/gameEngine";
+
 
 function Home({ onPlay }) {
   return (
