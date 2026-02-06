@@ -15,6 +15,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+         - name: Guard - only run from main
+        if: ${{ github.ref != 'refs/heads/main' }}
+        run: |
+          echo "This workflow must run from main. Current ref: $GITHUB_REF"
+          exit 1
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
